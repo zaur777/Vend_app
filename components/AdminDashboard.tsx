@@ -117,7 +117,7 @@ const AdminDashboard: React.FC = () => {
       <main className="flex-1 flex flex-col overflow-hidden">
         <header className="h-20 border-b border-slate-200 bg-white flex items-center justify-between px-8 shadow-sm relative z-20">
           <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-            {activeTab === 'DASHBOARD' ? 'Fleet Control' : activeTab === 'PROVISIONING' ? 'OS Builder' : 'System Setup Instructions'}
+            {activeTab === 'DASHBOARD' ? 'Fleet Control' : activeTab === 'PROVISIONING' ? 'OS Builder' : 'Installation Guide Tracks'}
           </h2>
           <div className="flex items-center gap-6">
              <div className="relative">
@@ -236,157 +236,93 @@ const AdminDashboard: React.FC = () => {
 
           {activeTab === 'SETUP_GUIDE' && (
             <div className="max-w-5xl mx-auto space-y-12 animate-fade-up">
+              <div className="grid grid-cols-3 gap-8 mb-12">
+                {[
+                   { title: 'User UI (Kiosk)', color: 'blue', desc: 'Local RPi4/LB-140 Setup' },
+                   { title: 'Admin Web', color: 'indigo', desc: 'Cloud/DB Deployment' },
+                   { title: 'Merchandiser', color: 'yellow', desc: 'Staff Portal Config' }
+                ].map((track, i) => (
+                  <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                    <div className={`w-12 h-12 bg-${track.color}-100 rounded-2xl mb-4 flex items-center justify-center text-${track.color}-600`}>
+                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    </div>
+                    <h4 className="font-black text-slate-800">{track.title}</h4>
+                    <p className="text-xs text-slate-400 font-bold uppercase tracking-tighter mt-1">{track.desc}</p>
+                  </div>
+                ))}
+              </div>
+
               <section className="bg-white p-12 rounded-[3rem] shadow-sm border border-slate-100">
                 <div className="flex items-center gap-4 mb-10">
                   <div className="w-16 h-16 bg-blue-100 rounded-3xl flex items-center justify-center text-blue-600">
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-black tracking-tight text-slate-900">Hardware Integration</h3>
-                    <p className="text-slate-500 font-medium">Connecting Raspberry Pi 4 to the LB-140 Control Board</p>
+                    <h3 className="text-3xl font-black tracking-tight text-slate-900">Track 1: Kiosk Hardware</h3>
+                    <p className="text-slate-500 font-medium">Wiring Raspberry Pi 4 to the LB-140 Control Board</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-12">
                   <div className="space-y-8">
-                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest">Wiring Diagram (UART)</h4>
+                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest">Serial Wiring Diagram</h4>
                     <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 font-mono text-sm space-y-4">
                       <div className="flex items-center justify-between p-3 bg-white rounded-xl shadow-sm">
-                        <span className="font-bold text-slate-400">RPI4 Pin 8 (TXD)</span>
+                        <span className="font-bold text-slate-400">RPI4 Pin 8 (TX)</span>
                         <span className="text-blue-500">&rarr;</span>
-                        <span className="font-bold text-slate-800">LB-140 J5 Pin 2 (RX)</span>
+                        <span className="font-bold text-slate-800">LB-140 Pin 2 (RX)</span>
                       </div>
                       <div className="flex items-center justify-between p-3 bg-white rounded-xl shadow-sm">
-                        <span className="font-bold text-slate-400">RPI4 Pin 10 (RXD)</span>
+                        <span className="font-bold text-slate-400">RPI4 Pin 10 (RX)</span>
                         <span className="text-blue-500">&rarr;</span>
-                        <span className="font-bold text-slate-800">LB-140 J5 Pin 3 (TX)</span>
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-white rounded-xl shadow-sm">
-                        <span className="font-bold text-slate-400">RPI4 Pin 6 (GND)</span>
-                        <span className="text-blue-500">&rarr;</span>
-                        <span className="font-bold text-slate-800">LB-140 J5 Pin 5 (GND)</span>
+                        <span className="font-bold text-slate-800">LB-140 Pin 3 (TX)</span>
                       </div>
                     </div>
-                    <p className="text-xs text-slate-400 leading-relaxed italic">
-                      Note: The LB-140 board uses 5V logic for UART. A level shifter (5V to 3.3V) is mandatory for Pin 10 (RXD) to avoid damaging the Raspberry Pi GPIO.
-                    </p>
                   </div>
-                  <div className="space-y-8">
-                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest">Pin Layout Description</h4>
-                    <ul className="space-y-4">
-                      {[
-                        { title: 'UART Speed', desc: 'Configure serial port for 9600 baud, 8-N-1.' },
-                        { title: 'Input Power', desc: 'LB-140 requires 24V DC from MDB PSU.' },
-                        { title: 'Touch USB', desc: 'Connect 32" Display touch controller to RPI4 USB 3.0 port.' }
-                      ].map((item, i) => (
-                        <li key={i} className="flex gap-4">
-                           <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                           <div>
-                             <p className="font-bold text-slate-800 text-sm">{item.title}</p>
-                             <p className="text-slate-500 text-xs">{item.desc}</p>
-                           </div>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="p-8 bg-blue-50 rounded-[2rem] border border-blue-100 flex items-center">
+                    <p className="text-xs text-blue-700 leading-relaxed font-bold">
+                      IMPORTANT: Use a 3.3V to 5V Bi-directional level shifter on the RPi4 RX line to protect the SoC from 5V surges from the LB-140 board.
+                    </p>
                   </div>
                 </div>
               </section>
 
               <section className="bg-slate-900 p-12 rounded-[3rem] shadow-2xl border border-slate-800 text-white">
                 <div className="flex items-center gap-4 mb-10">
-                  <div className="w-16 h-16 bg-blue-600 rounded-3xl flex items-center justify-center text-white">
+                  <div className="w-16 h-16 bg-indigo-600 rounded-3xl flex items-center justify-center text-white">
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-black tracking-tight">Software Environment</h3>
-                    <p className="text-slate-400 font-medium">OS Setup & Production Server Config</p>
+                    <h3 className="text-3xl font-black tracking-tight">Track 2: Admin Cloud</h3>
+                    <p className="text-slate-400 font-medium">Database Schema & Fleet Persistence</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-12">
-                   <div className="space-y-8">
-                      <h4 className="text-xs font-black text-blue-400 uppercase tracking-widest">1. OS Configuration</h4>
-                      <div className="bg-black/50 p-6 rounded-[2rem] border border-white/5 font-mono text-[11px] leading-relaxed text-slate-400">
-                        <p># Disable Serial Console in /boot/cmdline.txt</p>
-                        <p># Enable UART in /boot/config.txt</p>
-                        <code className="text-blue-400 block my-2">enable_uart=1</code>
-                        <p># Install Node.js (v18+) and Chromium</p>
-                        <code className="text-green-400 block my-2">curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -</code>
-                        <code className="text-green-400 block">sudo apt-get install -y nodejs chromium-browser x11-xserver-utils</code>
-                      </div>
-                   </div>
-                   <div className="space-y-8">
-                      <h4 className="text-xs font-black text-blue-400 uppercase tracking-widest">2. Kiosk Autostart</h4>
-                      <div className="bg-black/50 p-6 rounded-[2rem] border border-white/5 font-mono text-[11px] leading-relaxed text-slate-400">
-                        <p># Add to ~/.config/lxsession/LXDE-pi/autostart</p>
-                        <code className="text-blue-400 block my-2">@xset s off</code>
-                        <code className="text-blue-400 block my-2">@xset -dpms</code>
-                        <code className="text-blue-400 block my-2">@xset s noblank</code>
-                        <code className="text-blue-400 block">@chromium-browser --kiosk --incognito http://localhost:3000</code>
-                      </div>
-                   </div>
+                <div className="bg-black/50 p-8 rounded-[2rem] border border-white/5 font-mono text-[11px] leading-relaxed text-slate-400">
+                  <p>-- Initialize Production Fleet Database</p>
+                  <code className="text-indigo-400 block my-2">CREATE TABLE machines (id VARCHAR PRIMARY KEY, location TEXT);</code>
+                  <code className="text-indigo-400 block my-2">CREATE TABLE inventory (id SERIAL PRIMARY KEY, machine_id VARCHAR, slot INT, stock INT);</code>
+                  <p>-- Gemini API Security Proxy (Server-side)</p>
+                  {/* Fixed: Wrapped text with braces in a string literal to prevent JSX interpretation error */}
+                  <code className="text-green-400 block my-2">{"const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });"}</code>
                 </div>
               </section>
 
               <section className="bg-white p-12 rounded-[3rem] shadow-sm border border-slate-100">
                 <div className="flex items-center gap-4 mb-10">
-                  <div className="w-16 h-16 bg-indigo-100 rounded-3xl flex items-center justify-center text-indigo-600">
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
+                  <div className="w-16 h-16 bg-yellow-100 rounded-3xl flex items-center justify-center text-yellow-600">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-black tracking-tight text-slate-900">Database & Persistence</h3>
-                    <p className="text-slate-500 font-medium">Relational Schema for Fleet Management</p>
+                    <h3 className="text-3xl font-black tracking-tight text-slate-900">Track 3: Merchandiser</h3>
+                    <p className="text-slate-500 font-medium">Mobile PWA & Inventory Sync</p>
                   </div>
                 </div>
 
-                <div className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100 space-y-10">
-                   <div className="grid grid-cols-2 gap-10">
-                      <div>
-                        <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Schema Definition (PostgreSQL)</h4>
-                        <div className="font-mono text-[10px] text-slate-600 bg-white p-6 rounded-2xl border border-slate-200">
-                          <pre className="whitespace-pre-wrap">
-{`CREATE TABLE machines (
-  id VARCHAR(20) PRIMARY KEY,
-  location TEXT NOT NULL,
-  status VARCHAR(20),
-  last_sync TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE inventory (
-  id SERIAL PRIMARY KEY,
-  machine_id VARCHAR(20) REFERENCES machines(id),
-  slot_number INT CHECK (slot_number BETWEEN 1 AND 60),
-  product_name TEXT,
-  stock_level INT DEFAULT 0,
-  max_stock INT DEFAULT 20
-);
-
-CREATE TABLE transactions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  machine_id VARCHAR(20) REFERENCES machines(id),
-  product_name TEXT,
-  amount NUMERIC(10,2),
-  payment_method VARCHAR(20),
-  timestamp TIMESTAMP DEFAULT NOW()
-);`}
-                          </pre>
-                        </div>
-                      </div>
-                      <div className="space-y-8">
-                         <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                            <h5 className="font-black text-slate-800 text-sm mb-2">Edge Persistence</h5>
-                            <p className="text-xs text-slate-500 leading-relaxed">
-                               For local kiosk data, use <strong>SQLite</strong>. For fleet-wide synchronization, deploy a centralized <strong>PostgreSQL</strong> or <strong>Redis</strong> instance with a Node.js REST API layer using WebSockets for real-time status updates.
-                            </p>
-                         </div>
-                         <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                            <h5 className="font-black text-slate-800 text-sm mb-2">API Security</h5>
-                            <p className="text-xs text-slate-500 leading-relaxed">
-                               Encrypt the <code>process.env.API_KEY</code> on the server-side. Do not expose the Google GenAI key directly to client browsers; route AI requests through a secure proxy endpoint on your backend to prevent key exhaustion.
-                            </p>
-                         </div>
-                      </div>
-                   </div>
+                <div className="p-8 bg-slate-50 rounded-[2rem] border border-slate-100">
+                   <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                     Deploy the portal using <code>?mode=staff</code>. Ensure field staff devices have HTTPS access to the server. Use service workers to enable offline logging for remote locations with poor connectivity.
+                   </p>
                 </div>
               </section>
             </div>

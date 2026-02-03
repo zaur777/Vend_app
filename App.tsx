@@ -1,46 +1,53 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppView } from './types';
 import VendingInterface from './components/VendingInterface';
 import AdminDashboard from './components/AdminDashboard';
 import MerchandiserPortal from './components/MerchandiserPortal';
+import Launcher from './components/Launcher';
 
 const App: React.FC = () => {
-  const [view, setView] = useState<AppView>('ADMIN');
+  const [view, setView] = useState<AppView | 'LAUNCHER'>('LAUNCHER');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get('mode');
+
+    if (mode === 'kiosk') setView('VENDING');
+    else if (mode === 'admin') setView('ADMIN');
+    else if (mode === 'staff') setView('MERCHANDISER');
+    else setView('LAUNCHER');
+  }, []);
+
+  // Function to switch modes (updates URL without full refresh for smooth dev experience)
+  const navigateTo = (mode: string | null) => {
+    const url = new URL(window.location.href);
+    if (mode) url.searchParams.set('mode', mode);
+    else url.searchParams.delete('mode');
+    window.history.pushState({}, '', url);
+    
+    if (mode === 'kiosk') setView('VENDING');
+    else if (mode === 'admin') setView('ADMIN');
+    else if (mode === 'staff') setView('MERCHANDISER');
+    else setView('LAUNCHER');
+  };
 
   return (
-    <div className="min-h-screen">
-      {/* Dev Navigation Toggle - Typically hidden in production */}
-      <div className="fixed top-2 left-1/2 -translate-x-1/2 z-[9999] opacity-30 hover:opacity-100 transition-opacity bg-black/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 flex gap-4">
+    <div className="min-h-screen bg-slate-950">
+      {/* Dev Navigation - Subtle floating return to launcher */}
+      {view !== 'LAUNCHER' && (
         <button 
-          onClick={() => setView('VENDING')}
-          className={`text-xs font-bold uppercase tracking-widest ${view === 'VENDING' ? 'text-blue-400' : 'text-white'}`}
+          onClick={() => navigateTo(null)}
+          className="fixed bottom-4 left-4 z-[9999] bg-white/10 hover:bg-white/20 backdrop-blur-md text-white/40 hover:text-white px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all border border-white/5"
         >
-          User UI
+          &larr; Exit to Hub
         </button>
-        <div className="w-px h-4 bg-white/20"></div>
-        <button 
-          onClick={() => setView('MERCHANDISER')}
-          className={`text-xs font-bold uppercase tracking-widest ${view === 'MERCHANDISER' ? 'text-yellow-400' : 'text-white'}`}
-        >
-          Merchandiser
-        </button>
-        <div className="w-px h-4 bg-white/20"></div>
-        <button 
-          onClick={() => setView('ADMIN')}
-          className={`text-xs font-bold uppercase tracking-widest ${view === 'ADMIN' ? 'text-blue-400' : 'text-white'}`}
-        >
-          Admin
-        </button>
-      </div>
-
-      {view === 'VENDING' ? (
-        <VendingInterface />
-      ) : view === 'MERCHANDISER' ? (
-        <MerchandiserPortal />
-      ) : (
-        <AdminDashboard />
       )}
+
+      {view === 'VENDING' && <VendingInterface />}
+      {view === 'MERCHANDISER' && <MerchandiserPortal />}
+      {view === 'ADMIN' && <AdminDashboard />}
+      {view === 'LAUNCHER' && <Launcher onSelect={navigateTo} />}
     </div>
   );
 };
