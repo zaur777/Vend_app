@@ -1,0 +1,8 @@
+{
+  "name": "VendMaster Pro: Next-Gen Vending Management",
+  "description": "A comprehensive suite for vending machine operations, featuring a high-fidelity touchscreen interface for users and a robust management dashboard for fleet operators controlling up to 100 machines.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
