@@ -1,5 +1,5 @@
-          script: |
-            cd /var/www/vendapp
-            git pull origin main
-            npm install
-            npm run build
+script: |
+  cd /var/www/vendapp
+  git pull origin main
+  npm install
+  npm run build
