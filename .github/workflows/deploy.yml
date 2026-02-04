@@ -1,5 +1,12 @@
-script: |
-  cd /var/www/vendapp
-  git pull origin main
-  npm install
-  VITE_GEMINI_API_KEY=${{ secrets.VITE_GEMINI_API_KEY }} npm run build
+      - name: Executing remote ssh commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www/vendapp
+            git pull origin main
+            npm install
+            # Здесь GitHub сам заменит ${{ ... }} на реальный ключ перед отправкой команды
+            VITE_GEMINI_API_KEY="${{ secrets.VITE_GEMINI_API_KEY }}" npm run build
