@@ -1,28 +1,6 @@
-name: Deploy to VPS
-
-# Запускать деплой при пуше в ветку main
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Executing remote ssh commands
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22 # по умолчанию 22
           script: |
-            # Команды, которые выполнятся на вашем сервере:
             cd /var/www/vendapp
             git pull origin main
             npm install
-            pm2 restart all
+            npm run build
+            pm2 restart vendapp || pm2 start serve --name "vendapp" -- -s dist -l 3000
